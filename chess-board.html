@@ -1,0 +1,1431 @@
+<html>
+<head>
+    <script src="jquery-3.4.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            var pc;
+            var r;
+            var c;
+            var king=$("tr:nth-child(1) td:nth-child(4)").text();
+            var queen =$("tr:nth-child(1) td:nth-child(5)").text();
+            var rook=$("tr:nth-child(1) td:nth-child(1)").text();
+            var bishop=$("tr:nth-child(1) td:nth-child(3)").text();
+            var knight=$("tr:nth-child(1) td:nth-child(2)").text();
+            var rook2=$("tr:nth-child(8) td:nth-child(1)").text();
+            var bishop2=$("tr:nth-child(8) td:nth-child(3)").text();
+            var knight2=$("tr:nth-child(8) td:nth-child(2)").text();
+            var king2=$("tr:nth-child(8) td:nth-child(4)").text();
+            var queen2=$("tr:nth-child(8) td:nth-child(5)").text();
+            var pawn=$("tr:nth-child(2) td:nth-child(1)").text();
+            var pawn2=$("tr:nth-child(7) td:nth-child(1)").text();
+             var pos=1;
+            var rw;
+            var turn=0;
+            var kc=$("tr:nth-child(8) td:nth-child(4)");
+            $("#disp").html("white turn");
+            var kc2=$("tr:nth-child(1) td:nth-child(4)");
+            var kingmove=0;
+            var kingmove2=0;
+            var rookmove=0;
+            var rookmove1=0;
+            var rookmove2=0;
+            var rookmove3=0;
+            
+            $("td").click(function(){
+               
+            
+                if(pos%2==1){
+                    c=$(this).index();
+                    pc=$(this).text();
+                    r=$(this);
+                    rw=$(this).parent().index();
+                    
+                    
+                    if(pc!=""){
+                    
+                        if((turn%2==0)&&((pc==king2)||(pc==queen2)||(pc==rook2)||(pc==pawn2)||(pc==bishop2)||(pc==knight2))){
+                            pos++;
+                        }
+                        else if((turn%2==1)&&((pc==king)||(pc==queen)||(pc==rook)||(pc==pawn)||(pc==bishop)||(pc==knight))){
+                            pos++;
+                        }
+                    }
+                        
+                    }
+                
+                else {
+                    var r2=$(this).parent().index();
+                    var c2=$(this).index();
+                    var target=$(this);
+                    
+                    if(pc==king){if(($(this).text()!=king)&&($(this).text()!=queen)&&($(this).text()!=knight)&&($(this).text()!=rook)&&($(this).text()!=bishop)&&($(this).text()!=pawn)){
+                if(((Math.abs($(this).index()-c)==1)&&(Math.abs($(this).parent().index()-rw)==1))||((Math.abs($(this).index()-c)==0)&&(Math.abs($(this).parent().index()-rw)==1))||((Math.abs($(this).index()-c)==1)&&(Math.abs($(this).parent().index()-rw)==0))){
+                    if(canmove2()){
+                    if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                    $(this).html(pc);kingmove2++;
+                    kc2=$(this);
+                    turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){ $("#disp").html("white turn");             }             else{$("#disp").html("black turn");}}
+                    }  pos++;}
+                                   if((kingmove2==0)&&(rookmove2==0)&&(target.index()==1)&&(target.parent().index()==0)){
+                         
+                         
+                         var t=0;
+                         target.parent().children().each(function(){
+                             if(($(this).index()<3)&&($(this).index()>0)){
+                                 if($(this).text()!=""){t++;}
+                                 
+                             }
+                         })
+                         
+                     if((!ischeck())&&(canmove())&&(t==0)){r.empty();
+                                                  target.html(pc);
+                                                   $("tr:nth-child(1) td:nth-child(1)").empty();
+                                                           $("tr:nth-child(1) td:nth-child(3)").html(rook);
+                                                   kingmove2++;
+                                                   kc2=$(this);
+                                                   turn++;
+                                                  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}
+                                                  }
+                         pos++;
+                     
+                     }    
+                                                 if((kingmove2==0)&&(rookmove2==0)&&(target.index()==5)&&(target.parent().index()==0)){
+                         
+                         
+                         var t=0;
+                         target.parent().children().each(function(){
+                             if(($(this).index()>3)&&($(this).index()<7)){
+                                 if($(this).text()!=""){t++;}
+                                 
+                             }
+                         })
+                         
+                     if((!ischeck2())&&(canmove2())&&(t==0)){r.empty();
+                                                  target.html(pc);
+                                                   $("tr:nth-child(1) td:nth-child(8)").empty();
+                                                           $("tr:nth-child(1) td:nth-child(5)").html(rook);
+                                                   kingmove2++;
+                                                   kc2=$(this);
+                                                   turn++;
+                                                  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}
+                                                  }
+                         pos++;
+                     
+                     } 
+                                
+                                
+                                }
+                    
+                      else if(pc==queen){if(($(this).text()!=king)&&($(this).text()!=queen)&&($(this).text()!=knight)&&($(this).text()!=rook)&&($(this).text()!=bishop)&&($(this).text()!=pawn)){
+                                if((Math.abs(r2-rw)==0)&&(Math.abs(c2-c)!=0)){
+                                var n=0;
+                                if(c2>c){
+                                target.siblings().each(function(){
+                                if(($(this).index()>c)&&($(this).index()<c2)){
+                                    if($(this).text()!=""){
+                                        n++;
+                                    }
+                                }
+                            });}
+                            else{
+                                target.siblings().each(function(){
+                                if(($(this).index()>c2)&&($(this).index()<c)){
+                                    if($(this).text()!=""){
+                                        n++;
+                                    }
+                                }
+                            });
+                            }
+                            
+                            
+                            if(n==0){if(canmove2()){
+                            if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                            $(this).html(pc);
+                                turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}}
+
+                               }
+                            if((Math.abs(r2-rw)!=0)&&(Math.abs(c2-c)==0)){
+                                var n=0;
+                                if(r2>rw){
+                                    
+                                  target.parent().siblings().each(function(){
+                                      
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){
+                                          if($(this).children().eq(c).text()!=""){
+                                              
+                                              n++;
+                                          }
+                                      }
+                                  });  
+                                }
+                                else{
+                                    target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){
+                                          if($(this).children().eq(c).text()!=""){
+                                              n++;
+                                          }
+                                      }
+                                  });  
+                                    
+                                }
+                                if(n==0){if(canmove2()){
+                                    if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                    $(this).html(pc);
+                                    turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                                }
+                            }
+                          
+                          
+                          if(Math.abs($(this).index()-c)==Math.abs($(this).parent().index()-rw)){
+                              var n=0;
+                              if((c2>c)&&(r2>rw)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){    
+                                        
+                                              if($(this).children().eq(c+i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c>c2)&&(rw>r2)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){    
+                                          
+                                              if($(this).children().eq(c2+i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c2>c)&&(rw>r2)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){    
+                                          
+                                              if($(this).children().eq(c2-i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c>c2)&&(r2>rw)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){    
+                                          
+                                              if($(this).children().eq(c-i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                          
+                                      }
+                                  });
+                              }
+                             if(n==0){if(canmove2()){
+                                 if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                 $(this).html(pc);
+                                 turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                             }
+                          
+                              
+                             }
+                          
+                          
+                      }
+                           pos++;
+                          
+                      }
+                      
+                      else if(pc==rook){
+                  if(($(this).text()!=king)&&($(this).text()!=queen)&&($(this).text()!=knight)&&($(this).text()!=rook)&&($(this).text()!=bishop)&&($(this).text()!=pawn)){
+                          
+                        if((Math.abs(r2-rw)==0)&&(Math.abs(c2-c)!=0)){
+                                var n=0;
+                                if(c2>c){
+                                target.siblings().each(function(){
+                                if(($(this).index()>c)&&($(this).index()<c2)){
+                                    if($(this).text()!=""){
+                                        n++;
+                                    }
+                                }
+                            });}
+                            else{
+                                target.siblings().each(function(){
+                                if(($(this).index()>c2)&&($(this).index()<c)){
+                                    if($(this).text()!=""){
+                                        n++;
+                                    }
+                                }
+                            });
+                            }
+                            
+                            
+                            if(n==0){if(canmove2()){
+                            if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                            $(this).html(pc);
+                    if($("tr:nth-child(8) td:nth-child(1)").text()!=rook2){rookmove++;}
+                    if($("tr:nth-child(8) td:nth-child(8)").text()!=rook2){rookmove1++;}
+                    if($("tr:nth-child(1) td:nth-child(1)").text()!=rook){rookmove2++;}
+                    if($("tr:nth-child(1) td:nth-child(8)").text()!=rook){rookmove3++;}
+                                turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}}
+
+                               }
+                            if((Math.abs(r2-rw)!=0)&&(Math.abs(c2-c)==0)){
+                                var n=0;
+                                if(r2>rw){
+                                    
+                                  target.parent().siblings().each(function(){
+                                      
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){
+                                          if($(this).children().eq(c).text()!=""){
+                                              
+                                              n++;
+                                          }
+                                      }
+                                  });  
+                                }
+                                else{
+                                    target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){
+                                          if($(this).children().eq(c).text()!=""){
+                                              n++;
+                                          }
+                                      }
+                                  });  
+                                    
+                                }
+                                if(n==0){if(canmove2()){
+                                    if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                    $(this).html(pc);
+                                    if($("tr:nth-child(8) td:nth-child(1)").text()!=rook2){rookmove++;}
+                    if($("tr:nth-child(8) td:nth-child(8)").text()!=rook2){rookmove1++;}
+                    if($("tr:nth-child(1) td:nth-child(1)").text()!=rook){rookmove2++;}
+                    if($("tr:nth-child(1) td:nth-child(8)").text()!=rook){rookmove3++;}
+                                    turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                                }
+                            }
+                            
+                           }   
+                        
+                          pos++;
+                      }
+                      else if(pc==bishop){if(($(this).text()!=king)&&($(this).text()!=queen)&&($(this).text()!=knight)&&($(this).text()!=rook)&&($(this).text()!=bishop)&&($(this).text()!=pawn)){
+                          if(Math.abs($(this).index()-c)==Math.abs($(this).parent().index()-rw)){
+                              var n=0;
+                              if((c2>c)&&(r2>rw)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){    
+                                          
+                                              if($(this).children().eq(c+i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c>c2)&&(rw>r2)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){    
+                                          
+                                              if($(this).children().eq(c2+i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c2>c)&&(rw>r2)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){    
+                                          
+                                              if($(this).children().eq(c2-i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c>c2)&&(r2>rw)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){    
+                                          
+                                              if($(this).children().eq(c-i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                             if(n==0){if(canmove2()){
+                                 if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                 $(this).html(pc);
+                                 turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                             }
+                          
+                              
+                             }}
+                             pos++;
+                      }
+                      else if(pc==knight){if(($(this).text()!=king)&&($(this).text()!=queen)&&($(this).text()!=knight)&&($(this).text()!=rook)&&($(this).text()!=bishop)&&($(this).text()!=pawn)){
+                          if(((Math.abs($(this).index()-c)==1)&&(Math.abs($(this).parent().index()-rw)==2))||((Math.abs($(this).index()-c)==2)&&(Math.abs($(this).parent().index()-rw)==1))){if(canmove2()){
+                             if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                          $(this).html(pc);
+                              turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");} }
+                          }
+                      }
+                          pos++;
+                      }
+                    else if(pc==king2){
+                        
+                        
+                        if(($(this).text()!=king2)&&($(this).text()!=queen2)&&($(this).text()!=knight2)&&($(this).text()!=rook2)&&($(this).text()!=bishop2)&&($(this).text()!=pawn2)){
+                if(((Math.abs($(this).index()-c)==1)&&(Math.abs($(this).parent().index()-rw)==1))||((Math.abs($(this).index()-c)==0)&&(Math.abs($(this).parent().index()-rw)==1))||((Math.abs($(this).index()-c)==1)&&(Math.abs($(this).parent().index()-rw)==0))){if(canmove()){
+                    if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                    $(this).html(pc);kingmove++;
+                    kc=$(this);
+                    turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                    }  pos++;}
+                        
+                     if((kingmove==0)&&(rookmove==0)&&(target.index()==1)&&(target.parent().index()==7)){
+                         
+                         
+                         var t=0;
+                         target.parent().children().each(function(){
+                             if(($(this).index()<3)&&($(this).index()>0)){
+                                 if($(this).text()!=""){t++;}
+                                 
+                             }
+                         })
+                         
+                     if((!ischeck())&&(canmove())&&(t==0)){r.empty();
+                                                  target.html(pc);
+                                                   $("tr:nth-child(8) td:nth-child(1)").empty();
+                                                           $("tr:nth-child(8) td:nth-child(3)").html(rook2);
+                                                   kingmove++;
+                                                   kc=$(this);
+                                                   turn++;
+                                                  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}
+                                                  }
+                         pos++;
+                     
+                     }    
+                                             if((kingmove==0)&&(rookmove==0)&&(target.index()==5)&&(target.parent().index()==7)){
+                         
+                         
+                         var t=0;
+                         target.parent().children().each(function(){
+                             if(($(this).index()>3)&&($(this).index()<7)){
+                                 if($(this).text()!=""){t++;}
+                                 
+                             }
+                         })
+                         
+                     if((!ischeck())&&(canmove())&&(t==0)){r.empty();
+                                                  target.html(pc);
+                                                   $("tr:nth-child(8) td:nth-child(8)").empty();
+                                                           $("tr:nth-child(8) td:nth-child(5)").html(rook2);
+                                                   kingmove++;
+                                                   kc=$(this);
+                                                   turn++;
+                                                  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}
+                                                  }
+                         pos++;
+                     
+                     } 
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      }
+                      else if(pc==queen2){if(($(this).text()!=king2)&&($(this).text()!=queen2)&&($(this).text()!=knight2)&&($(this).text()!=rook2)&&($(this).text()!=bishop2)&&($(this).text()!=pawn2)){
+                                                         if((Math.abs(r2-rw)==0)&&(Math.abs(c2-c)!=0)){
+                                var n=0;
+                                if(c2>c){
+                                target.siblings().each(function(){
+                                if(($(this).index()>c)&&($(this).index()<c2)){
+                                    if($(this).text()!=""){
+                                        n++;
+                                    }
+                                }
+                            });}
+                            else{
+                                target.siblings().each(function(){
+                                if(($(this).index()>c2)&&($(this).index()<c)){
+                                    if($(this).text()!=""){
+                                        n++;
+                                    }
+                                }
+                            });
+                            }
+                            
+                            
+                            if(n==0){if(canmove()){
+                            if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                            $(this).html(pc);
+                                turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}}
+
+                               }
+                            if((Math.abs(r2-rw)!=0)&&(Math.abs(c2-c)==0)){
+                                var n=0;
+                                if(r2>rw){
+                                    
+                                  target.parent().siblings().each(function(){
+                                      
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){
+                                          if($(this).children().eq(c).text()!=""){
+                                              
+                                              n++;
+                                          }
+                                      }
+                                  });  
+                                }
+                                else{
+                                    target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){
+                                          if($(this).children().eq(c).text()!=""){
+                                              n++;
+                                          }
+                                      }
+                                  });  
+                                    
+                                }
+                                if(n==0){if(canmove()){
+                                    if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                    $(this).html(pc);
+                                    turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                                }
+                            }
+                          
+                          
+                          if(Math.abs($(this).index()-c)==Math.abs($(this).parent().index()-rw)){
+                              var n=0;
+                              if((c2>c)&&(r2>rw)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){    
+                                          
+                                              if($(this).children().eq(c+i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c>c2)&&(rw>r2)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){    
+                                        
+                                if($(this).children().eq(c2+i).text()!=""){
+                                                  n++;
+                                              }
+                                          
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c2>c)&&(rw>r2)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){    
+                                          
+                                              if($(this).children().eq(c2-i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c>c2)&&(r2>rw)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){    
+                                          
+                                              if($(this).children().eq(c-i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                             if(n==0){if(canmove()){
+                                 if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                 $(this).html(pc);
+                                 turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                             }
+                          
+                              
+                             } 
+                          
+                          
+                          
+                          }
+                           pos++;
+                          
+                      }
+                      
+                      else if(pc==rook2){
+                  if(($(this).text()!=king2)&&($(this).text()!=queen2)&&($(this).text()!=knight2)&&($(this).text()!=rook2)&&($(this).text()!=bishop2)&&($(this).text()!=pawn2)){
+                          
+                        if((Math.abs(r2-rw)==0)&&(Math.abs(c2-c)!=0)){
+                                var n=0;
+                                if(c2>c){
+                                target.siblings().each(function(){
+                                if(($(this).index()>c)&&($(this).index()<c2)){
+                                    if($(this).text()!=""){
+                                        n++;
+                                    }
+                                }
+                            });}
+                            else{
+                                target.siblings().each(function(){
+                                if(($(this).index()>c2)&&($(this).index()<c)){
+                                    if($(this).text()!=""){
+                                        n++;
+                                    }
+                                }
+                            });
+                            }
+                            
+                            
+                            if(n==0){
+                                if(canmove()){
+                            if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                            $(this).html(pc);
+                                    if($("tr:nth-child(8) td:nth-child(1)").text()!=rook2){rookmove++;}
+                    if($("tr:nth-child(8) td:nth-child(8)").text()!=rook2){rookmove1++;}
+                    if($("tr:nth-child(1) td:nth-child(1)").text()!=rook){rookmove2++;}
+                    if($("tr:nth-child(1) td:nth-child(8)").text()!=rook){rookmove3++;}
+                                turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}}
+
+                               }
+                            if((Math.abs(r2-rw)!=0)&&(Math.abs(c2-c)==0)){
+                                var n=0;
+                                if(r2>rw){
+                                    
+                                  target.parent().siblings().each(function(){
+                                      
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){
+                                          if($(this).children().eq(c).text()!=""){
+                                              
+                                              n++;
+                                          }
+                                      }
+                                  });  
+                                }
+                                else{
+                                    target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){
+                                          if($(this).children().eq(c).text()!=""){
+                                              n++;
+                                          }
+                                      }
+                                  });  
+                                    
+                                }
+                                if(n==0){
+                                    if(canmove()){
+                                    if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                    $(this).html(pc);
+                                        if($("tr:nth-child(8) td:nth-child(1)").text()!=rook2){rookmove++;}
+                    if($("tr:nth-child(8) td:nth-child(8)").text()!=rook2){rookmove1++;}
+                    if($("tr:nth-child(1) td:nth-child(1)").text()!=rook){rookmove2++;}
+                    if($("tr:nth-child(1) td:nth-child(8)").text()!=rook){rookmove3++;}
+                                    turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}
+                                }
+                            } }
+                        
+                           
+                        
+                          
+                          pos++;
+                      }}
+                      else if(pc==bishop2){if(($(this).text()!=king2)&&($(this).text()!=queen2)&&($(this).text()!=knight2)&&($(this).text()!=rook2)&&($(this).text()!=bishop2)&&($(this).text()!=pawn2)){
+                          
+                          if(Math.abs($(this).index()-c)==Math.abs($(this).parent().index()-rw)){
+                              var n=0;
+                              if((c2>c)&&(r2>rw)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){    
+                                          
+                                              if($(this).children().eq(c+i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c>c2)&&(rw>r2)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){    
+                                          
+                                              if($(this).children().eq(c2+i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                              if((c2>c)&&(rw>r2)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>r2)&&($(this).index()<rw)){    
+                                          
+                                              if($(this).children().eq(c2-i).text()!=""){
+                                                  n++;
+                                                  
+                                                  
+                                              }
+                                          i++;
+                                          
+                                      }
+                                  });
+                              }
+                              if((c>c2)&&(r2>rw)){
+                                  let i=1;
+                                  target.parent().siblings().each(function(){
+                                      if(($(this).index()>rw)&&($(this).index()<r2)){    
+                                          
+                                              if($(this).children().eq(c-i).text()!=""){
+                                                  n++;
+                                              }
+                                          i++;
+                                      }
+                                  });
+                              }
+                             if(n==0){if(canmove()){
+                                 if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                 $(this).html(pc);
+                                 turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                             }
+                          
+                              
+                             }
+                          
+                      }
+                             pos++;
+                      }
+                      else if(pc==knight2){if(($(this).text()!=king2)&&($(this).text()!=queen2)&&($(this).text()!=knight2)&&($(this).text()!=rook2)&&($(this).text()!=bishop2)&&($(this).text()!=pawn2)){
+                          if(((Math.abs($(this).index()-c)==1)&&(Math.abs($(this).parent().index()-rw)==2))||((Math.abs($(this).index()-c)==2)&&(Math.abs($(this).parent().index()-rw)==1))){if(canmove()){
+                             if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                          $(this).html(pc);
+                              turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}} 
+                          }
+                      }
+                          pos++;
+                      }
+                    else if(pc==pawn){
+                        if(($(this).text()!=king)&&($(this).text()!=queen)&&($(this).text()!=knight)&&($(this).text()!=rook)&&($(this).text()!=bishop)){
+                            if(((((rw==1)&&(r2==3)&&(c-c2==0)&&($("tr:nth-child(3)").children().eq(c).text()==""))||((r2-rw==1)&&(c2-c==0)))&&($(this).text()==""))||((Math.abs(c2-c)==1)&&(r2-rw==1)&&(($(this).text()==king2)||($(this).text()==queen2)||($(this).text()==knight2)||($(this).text()==pawn2)||($(this).text()==rook2)||($(this).text()==bishop2)))){if(r2!=7){if(canmove2()){
+                                if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                $(this).html(pc);
+                                turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}
+                            }}
+                            else{if(canmove2()){
+                                
+                                if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                $(this).html(queen);
+                                turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();}
+                                if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}}
+                            }
+                            
+                            }
+                        }pos++;
+                    }
+                                        else if(pc==pawn2){
+                        if(($(this).text()!=king2)&&($(this).text()!=queen2)&&($(this).text()!=knight2)&&($(this).text()!=rook2)&&($(this).text()!=bishop2)){
+                            if(((((rw==6)&&(r2==4)&&(c-c2==0)&&($("tr:nth-child(6)").children().eq(c).text()==""))||((r2-rw==-1)&&(c2-c==0)))&&($(this).text()==""))||((Math.abs(c2-c)==1)&&(r2-rw==-1)&&(($(this).text()==king)||($(this).text()==queen)||($(this).text()==knight)||($(this).text()==pawn)||($(this).text()==rook)||($(this).text()==bishop)))){if(r2!=0){
+                                if(canmove()){
+                                if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}            else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                $(this).html(pc);
+                                turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();} if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}
+                            }}
+                            else{
+                                if(canmove()){
+                                if((target.text()==king)||(target.text()==queen)||(target.text()==rook)||(target.text()==knight)||(target.text()==bishop)||(target.text()==pawn)){$("#coins").append(target.text());}   else if(target.text()!=""){$("#coin").append(target.text());}        r.empty();    
+                                $(this).html(queen2);
+                                turn++;  if((ischeck())||(ischeck2())){$("#check").html("check");} else{$("#check").empty();}
+                                    if(turn%2==0){                 $("#disp").html("white turn");             }             else{                 $("#disp").html("black turn");}
+                                }
+                            }
+                            
+                            }
+                        }pos++;
+                                            
+                    }
+                    
+                      function canmove(){
+                          var t=target.text();
+                          var a=new Array(8);
+                          r.empty();
+                          var l=0;
+                          var kcol=kc.index();
+                          var kr=kc.parent().index();
+                          var type=kc;
+                          target.html(pc);
+                          if(pc==king2){
+                              kc=target;
+                              var kcol=kc.index();
+                          var kr=kc.parent().index();
+                          }
+
+                          kc.parent().children().each(function(){
+                              if($(this).text()!=""){
+                                 a[l]=$(this).text(); 
+                                  l++;
+                              }
+                          });
+                          
+                          for(l=0;a[l];l++){
+                              if(((a[l]==rook)&&(a[l+1]==king2))||((a[l]==king2)&&(a[l+1]==rook))||((a[l]==queen)&&(a[l+1]==king2))||((a[l]==king2)&&(a[l+1]==queen))){
+                                  kc=r;
+                                    target.html(t);
+                              r.html(pc);
+                                  return false;
+                                  
+                              }
+                          } 
+                          l=0;
+                          var b=new Array(8);
+                          
+                           $("tr").each(function(){
+                        
+                               
+                              if($(this).children().eq(kcol).text()!=""){
+                                  b[l]=$(this).children().eq(kcol).text();
+                                  l++;
+                              }  
+                            });
+                            for(l=0;b[l];l++){
+                             if(((b[l]==rook)&&(b[l+1]==king2))||((b[l]==king2)&&(b[l+1]==rook))||((b[l]==queen)&&(b[l+1]==king2))||((b[l]==king2)&&(b[l+1]==queen))){
+                                 kc=type;
+                                    target.html(t);
+                              r.html(pc);
+                                  return false;
+                                  
+                              }}
+                          l=0;
+                          var d=new Array(8);
+                          $("td").each(function(){
+                              if(($(this).parent().index()-kr)==($(this).index()-kcol)){
+                                  if($(this).text()!=""){
+                                      d[l]=$(this).text();
+                                      l++;
+                                  }
+                              }
+                          });
+                          for(l=0;d[l];l++){
+                              if(((d[l]==queen)&&(d[l+1]==king2))||((d[l]==king2)&&(d[l+1]==queen))||((d[l]==bishop)&&(d[l+1]==king2))||((d[l]==king2)&&(d[l+1]==bishop))){
+                                  kc=type;
+                                  target.html(t);
+                                  r.html(pc);
+                                  return false;
+                              }
+                          }
+                                                    l=0;
+                          var e=new Array(8);
+                          $("td").each(function(){
+                              if(($(this).parent().index()-kr)==-($(this).index()-kcol)){
+                                  if($(this).text()!=""){
+                                      e[l]=$(this).text();
+                                      l++;
+                                  }
+                              }
+                          });
+                          for(l=0;e[l];l++){
+                              if(((e[l]==queen)&&(e[l+1]==king2))||((e[l]==king2)&&(e[l+1]==queen))||((e[l]==bishop)&&(e[l+1]==king2))||((e[l]==king2)&&(e[l+1]==bishop))){
+                                  kc=type;
+                                  target.html(t);
+                                  r.html(pc);
+                                  return false;
+                              }
+                          }
+                          
+                            if((kc.parent().siblings().eq(kr-1).children().eq(kcol-2).text()==knight)&&(kr-1>=0)&&(kcol>=2)){
+                                kc=type;
+                              target.html(t);
+                                  r.html(pc);
+                                  return false; 
+                          }
+                        if((kc.parent().siblings().eq(kr-2).children().eq(kcol-1).text()==knight)&&(kr>=2)&&(kcol>=1)){
+                            kc=type;
+                              target.html(t);
+                                  r.html(pc);
+                                  return false; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr-1).children().eq(kcol+2).text()==knight)&&(kr>=1)&&(kcol<=5)){kc=type;
+                             target.html(t);
+                                  r.html(pc);
+                                  return false; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr-2).children().eq(kcol+1).text()==knight)&&(kr>=2)&&(kcol<=6)){kc=type;
+                              target.html(t);
+                                  r.html(pc);
+                                  return false; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr+1).children().eq(kcol-1).text()==knight)&&(kr<=5)&&(kcol>=1)){kc=type;
+                              target.html(t);
+                                  r.html(pc);
+                                  return false; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr+1).children().eq(kcol+1).text()==knight)&&(kr<=5)&&(kcol<=6)){kc=type;
+                              target.html(t);
+                                  r.html(pc);
+                                  return false; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr).children().eq(kcol-2).text()==knight)&&(kr<=6)&&(kcol>=2)){kc=type;
+                              target.html(t);
+                                  r.html(pc);
+                                  return false; 
+                          }
+                                                    if((kc2.parent().siblings().eq(kr).children().eq(kcol+2).text()==knight2)&&(kr<=6)&&(kcol<=5)){kc=type;
+                              target.html(t);
+                                  r.html(pc);
+                                  return false; 
+                          }
+                          if((kc.parent().siblings().eq(kr-1).children().eq(kcol-1).text()==pawn)||(kc.parent().siblings().eq(kr-1).children().eq(kcol+1).text()==pawn)){kc=type;
+                          
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                          kc=type;
+                          target.html(t);
+                                                        r.html(pc);
+                          
+                              return true;
+                              
+                          
+                      }     
+                                          function canmove2(){
+                          var t=target.text();
+                          var a=new Array(8);
+                          r.empty();
+                          var l=0;
+                          var kcol=kc2.index();
+                          var kr=kc2.parent().index();
+                          target.html(pc);
+                        var type=kc2;
+                            if(pc==king){
+                                kc2=target;
+                                var kcol=kc2.index();
+                          var kr=kc2.parent().index();
+                            }
+                          kc2.parent().children().each(function(){
+                              if($(this).text()!=""){
+                                 a[l]=$(this).text(); 
+                                  l++;
+                              }
+                          });
+                          
+                          for(l=0;a[l];l++){
+                              if(((a[l]==rook2)&&(a[l+1]==king))||((a[l]==king)&&(a[l+1]==rook2))||((a[l]==queen2)&&(a[l+1]==king))||((a[l]==king)&&(a[l+1]==queen2))){
+                                  kc2=type;
+                                    target.html(t);
+                              r.html(pc);
+                                  return false;
+                                  
+                              }
+                          } 
+                          l=0;
+                          var b=new Array(8);
+                          
+                           $("tr").each(function(){
+                        
+                               
+                              if($(this).children().eq(kcol).text()!=""){
+                                  b[l]=$(this).children().eq(kcol).text();
+                                  l++;
+                              }  
+                            });
+                            for(l=0;b[l];l++){
+                             if(((b[l]==rook2)&&(b[l+1]==king))||((b[l]==king)&&(b[l+1]==rook2))||((b[l]==queen2)&&(b[l+1]==king))||((b[l]==king)&&(b[l+1]==queen2))){
+                                 kc2=type;
+                                    target.html(t);
+                              r.html(pc);
+                                  return false;
+                                  
+                              }}
+                          l=0;
+                          var d=new Array(8);
+                          $("td").each(function(){
+                              if(($(this).parent().index()-kr)==($(this).index()-kcol)){
+                                  if($(this).text()!=""){
+                                      d[l]=$(this).text();
+                                      l++;
+                                  }
+                              }
+                          });
+                          for(l=0;d[l];l++){
+                              if(((d[l]==queen2)&&(d[l+1]==king))||((d[l]==king)&&(d[l+1]==queen2))||((d[l]==bishop2)&&(d[l+1]==king))||((d[l]==king)&&(d[l+1]==bishop2))){kc2=type;
+                                  target.html(t);
+                                  r.html(pc);
+                                  return false;
+                              }
+                          }
+                                                    l=0;
+                          var e=new Array(8);
+                          $("td").each(function(){
+                              if(($(this).parent().index()-kr)==-($(this).index()-kcol)){
+                                  if($(this).text()!=""){
+                                      e[l]=$(this).text();
+                                      l++;
+                                  }
+                              }
+                          });
+                          for(l=0;e[l];l++){
+                              if(((e[l]==queen2)&&(e[l+1]==king))||((e[l]==king)&&(e[l+1]==queen2))||((e[l]==bishop2)&&(e[l+1]==king))||((e[l]==king)&&(e[l+1]==bishop2))){kc2=type;
+                                  target.html(t);
+                                  r.html(pc);
+                                  return false;
+                              }
+                          }
+                          
+                          if((kc2.parent().siblings().eq(kr-1).children().eq(kcol-2).text()==knight2)&&(kr-1>=0)&&(kcol>=2)){kc2=type;
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                        if((kc2.parent().siblings().eq(kr-2).children().eq(kcol-1).text()==knight2)&&(kr>=2)&&(kcol>=1)){kc2=type;
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr-1).children().eq(kcol+2).text()==knight2)&&(kr>=1)&&(kcol<=5)){kc2=type;
+                                                        
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr-2).children().eq(kcol+1).text()==knight2)&&(kr>=2)&&(kcol<=6)){kc2=type;
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr+1).children().eq(kcol-1).text()==knight2)&&(kr<=5)&&(kcol>=1)){kc2=type;
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr+1).children().eq(kcol+1).text()==knight2)&&(kr<=5)&&(kcol<=6)){kc2=type;
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr).children().eq(kcol-2).text()==knight2)&&(kr<=6)&&(kcol>=2)){kc2=type;
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr).children().eq(kcol+2).text()==knight2)&&(kr<=6)&&(kcol<=5)){kc2=type;
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                          if((kc2.parent().siblings().eq(kr).children().eq(kcol-1).text()==pawn2)||(kc2.parent().siblings().eq(kr).children().eq(kcol+1).text()==pawn2)){
+                              kc2=type;
+                              target.html(t);
+                              r.html(pc);
+                              return false;
+                          }
+                          kc2=type;
+                          target.html(t);
+                                                        r.html(pc);
+                          
+                              return true;
+                              
+                          
+                      }
+                    function ischeck(){
+                        var a=new Array(8);
+                        var l=0;
+                          var kcol=kc.index();
+                          var kr=kc.parent().index();
+                        var v=0;
+                        kc.parent().children().each(function(){
+                              if($(this).text()!=""){
+                                 a[l]=$(this).text(); 
+                                  l++;
+                              }
+                          });
+                          
+                          for(l=0;a[l];l++){
+                              if(((a[l]==rook)&&(a[l+1]==king2))||((a[l]==king2)&&(a[l+1]==rook))||((a[l]==queen)&&(a[l+1]==king2))||((a[l]==king2)&&(a[l+1]==queen))){
+                                    return true; 
+                                  
+                              }
+                          } 
+                          l=0;
+                          var b=new Array(8);
+                          
+                           $("tr").each(function(){
+                        
+                               
+                              if($(this).children().eq(kcol).text()!=""){
+                                  b[l]=$(this).children().eq(kcol).text();
+                                  l++;
+                              }  
+                            });
+                            for(l=0;b[l];l++){
+                             if(((b[l]==rook)&&(b[l+1]==king2))||((b[l]==king2)&&(b[l+1]==rook))||((b[l]==queen)&&(b[l+1]==king2))||((b[l]==king2)&&(b[l+1]==queen))){
+                                    return true; 
+                                  
+                              }}
+                          l=0;
+                          var d=new Array(8);
+                          $("td").each(function(){
+                              if(($(this).parent().index()-kr)==($(this).index()-kcol)){
+                                  if($(this).text()!=""){
+                                      d[l]=$(this).text();
+                                      l++;
+                                  }
+                              }
+                          });
+                          for(l=0;d[l];l++){
+                              if(((d[l]==queen)&&(d[l+1]==king2))||((d[l]==king2)&&(d[l+1]==queen))||((d[l]==bishop)&&(d[l+1]==king2))||((d[l]==king2)&&(d[l+1]==bishop))){
+                                  return true; 
+                              }
+                          }
+                                                    l=0;
+                          var e=new Array(8);
+                          $("td").each(function(){
+                              if(($(this).parent().index()-kr)==-($(this).index()-kcol)){
+                                  if($(this).text()!=""){
+                                      e[l]=$(this).text();
+                                      l++;
+                                  }
+                              }
+                          });
+                          for(l=0;e[l];l++){
+                              if(((e[l]==queen)&&(e[l+1]==king2))||((e[l]==king2)&&(e[l+1]==queen))||((e[l]==bishop)&&(e[l+1]==king2))||((e[l]==king2)&&(e[l+1]==bishop))){
+                                  return true; 
+                              }
+                          }
+                          
+                                                      if((kc.parent().siblings().eq(kr-1).children().eq(kcol-2).text()==knight)&&(kr-1>=0)&&(kcol>=2)){
+                             return true; 
+                          }
+                        if((kc.parent().siblings().eq(kr-2).children().eq(kcol-1).text()==knight)&&(kr>=2)&&(kcol>=1)){
+                              return true; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr-1).children().eq(kcol+2).text()==knight)&&(kr>=1)&&(kcol<=5)){
+                              return true; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr-2).children().eq(kcol+1).text()==knight)&&(kr>=2)&&(kcol<=6)){
+                              return true; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr+1).children().eq(kcol-1).text()==knight)&&(kr<=5)&&(kcol>=1)){
+                             return true; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr+1).children().eq(kcol+1).text()==knight)&&(kr<=5)&&(kcol<=6)){
+                              return true; 
+                          }
+                                                    if((kc.parent().siblings().eq(kr).children().eq(kcol-2).text()==knight)&&(kr<=6)&&(kcol>=2)){
+                              return true; 
+                          }
+                                                    if((kc2.parent().siblings().eq(kr).children().eq(kcol+2).text()==knight2)&&(kr<=6)&&(kcol<=5)){
+                            return true; 
+                          }
+
+                          if((kc.parent().siblings().eq(kr-1).children().eq(kcol-1).text()==pawn)||(kc.parent().siblings().eq(kr-1).children().eq(kcol+1).text()==pawn)){
+                              return true; 
+                          }
+                       
+                        
+                            return false;
+                        
+                    }
+                    function ischeck2(){
+                                                var a=new Array(8);
+                        var l=0;
+                          var kcol=kc2.index();
+                          var kr=kc2.parent().index();
+                        var v=0;
+                        
+                        
+                        kc2.parent().children().each(function(){
+                              if($(this).text()!=""){
+                                 a[l]=$(this).text(); 
+                                  l++;
+                              }
+                          });
+                          
+                          for(l=0;a[l];l++){
+                              if(((a[l]==rook2)&&(a[l+1]==king))||((a[l]==king)&&(a[l+1]==rook2))||((a[l]==queen2)&&(a[l+1]==king))||((a[l]==king)&&(a[l+1]==queen2))){
+                                    return true; 
+                                  
+                              }
+                          } 
+                          l=0;
+                          var b=new Array(8);
+                          
+                           $("tr").each(function(){
+                        
+                               
+                              if($(this).children().eq(kcol).text()!=""){
+                                  b[l]=$(this).children().eq(kcol).text();
+                                  l++;
+                              }  
+                            });
+                            for(l=0;b[l];l++){
+                             if(((b[l]==rook2)&&(b[l+1]==king))||((b[l]==king)&&(b[l+1]==rook2))||((b[l]==queen2)&&(b[l+1]==king))||((b[l]==king)&&(b[l+1]==queen2))){
+                                    return true; 
+                                  
+                              }}
+                          l=0;
+                          var d=new Array(8);
+                          $("td").each(function(){
+                              if(($(this).parent().index()-kr)==($(this).index()-kcol)){
+                                  if($(this).text()!=""){
+                                      d[l]=$(this).text();
+                                      l++;
+                                  }
+                              }
+                          });
+                          for(l=0;d[l];l++){
+                              if(((d[l]==queen2)&&(d[l+1]==king))||((d[l]==king)&&(d[l+1]==queen2))||((d[l]==bishop2)&&(d[l+1]==king))||((d[l]==king)&&(d[l+1]==bishop2))){
+                                  return true; 
+                              }
+                          }
+                                                    l=0;
+                          var e=new Array(8);
+                          $("td").each(function(){
+                              if(($(this).parent().index()-kr)==-($(this).index()-kcol)){
+                                  if($(this).text()!=""){
+                                      e[l]=$(this).text();
+                                      l++;
+                                  }
+                              }
+                          });
+                          for(l=0;e[l];l++){
+                              if(((e[l]==queen2)&&(e[l+1]==king))||((e[l]==king)&&(e[l+1]==queen2))||((e[l]==bishop2)&&(e[l+1]==king))||((e[l]==king)&&(e[l+1]==bishop2))){
+                                  return true; 
+                              }
+                          }
+                          
+                            if((kc2.parent().siblings().eq(kr-1).children().eq(kcol-2).text()==knight2)&&(kr-1>=0)&&(kcol>=2)){
+                              return true;
+                          }
+                        if((kc2.parent().siblings().eq(kr-2).children().eq(kcol-1).text()==knight2)&&(kr>=2)&&(kcol>=1)){
+                              return true;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr-1).children().eq(kcol+2).text()==knight2)&&(kr>=1)&&(kcol<=5)){
+                              return true;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr-2).children().eq(kcol+1).text()==knight2)&&(kr>=2)&&(kcol<=6)){
+                              return true;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr+1).children().eq(kcol-1).text()==knight2)&&(kr<=5)&&(kcol>=1)){
+                              return true;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr+1).children().eq(kcol+1).text()==knight2)&&(kr<=5)&&(kcol<=6)){
+                              return true;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr).children().eq(kcol-2).text()==knight2)&&(kr<=6)&&(kcol>=2)){
+                              return true;
+                          }
+                                                    if((kc2.parent().siblings().eq(kr).children().eq(kcol+2).text()==knight2)&&(kr<=6)&&(kcol<=5)){
+                              
+                              return true;
+                          }
+                          if((kc2.parent().siblings().eq(kr).children().eq(kcol-1).text()==pawn2)||(kc2.parent().siblings().eq(kr).children().eq(kcol+1).text()==pawn2)){
+                              
+                              return true; 
+                          }         
+                                    
+                            return false;
+                        
+                    }   if($("tr:nth-child(8) td:nth-child(1)").text()!=rook2){rookmove++;}
+                    if($("tr:nth-child(8) td:nth-child(8)").text()!=rook2){rookmove1++;}
+                    if($("tr:nth-child(1) td:nth-child(1)").text()!=rook){rookmove2++;}
+                    if($("tr:nth-child(1) td:nth-child(8)").text()!=rook){rookmove3++;}
+                    
+                
+                     }
+                
+                
+            });
+        });
+        
+        
+    </script>
+<style>
+    table{
+        border:2px solid grey;
+        height:700px;
+        width:700px;
+        position:fixed;
+        left:300px;
+    }
+    td{
+        height:80px;
+        width:80px;
+        font-size:50px;
+        text-align: center;
+        animation:.5s;
+        border:3px solid black;
+        position:relative;
+        border-radius:10%;
+    }
+    body{
+        background-color:black;
+    }
+    td:hover{
+        top:-5px;
+        left:5px;
+        z-index: auto;
+        background-color:gold;
+    }
+    td:active{
+        background-color:red;
+    }
+    #disp{
+        position:fixed;
+        height:100px;
+        width:100px;
+        background-color:black;
+        color:gold;
+        top:200px;
+        left:100px;
+        font-size:30px;
+        animation:.5s;
+    }
+    #coins{
+        position:fixed;
+        height:300px;
+        width:400px;
+        background-color:gold;
+        font-size:50px;
+        top:400px;
+        left:1050px;
+        
+    }
+        #coin{
+        position:fixed;
+        height:300px;
+        width:400px;
+        background-color:gold;
+        font-size:50px;
+        top:50px;
+        left:1050px;
+    }
+    
+    #check{
+        background-color:black;
+        color:red;
+        font-size: 50px;
+        text-align: center;
+        position:fixed;
+        height:100px;
+        width:100px;
+        top:500px;
+        left:100px;
+        animation:.5s;
+        
+    }
+    
+    </style>
+    </head>
+    <body>
+        <table id="board">
+            <tr>
+                <td bgcolor="brown"><div id="A1">&#9820</div></td>
+                <td bgcolor="white">&#9822</td>
+                <td bgcolor="brown"><div id="C1">&#9821</div></td>
+                <td bgcolor="white">&#9818</td>
+                <td bgcolor="brown"><div id="E1">&#9819</div></td>
+                <td bgcolor="white">&#9821</td>
+                <td bgcolor="brown"><div id="H1">&#9822</div></td>
+                <td bgcolor="white">&#9820</td>
+            </tr>
+            <tr>
+                <td bgcolor="white">&#9823</td>
+                <td bgcolor="brown"><div id="cell">&#9823</div></td>
+                <td bgcolor="white">&#9823</td>
+                <td bgcolor="brown"><div id="cell">&#9823</div></td>
+                <td bgcolor="white">&#9823</td>
+                <td bgcolor="brown"><div id="cell">&#9823</div></td>
+                <td bgcolor="white">&#9823</td>
+                <td bgcolor="brown"><div id="cell">&#9823</div></td>
+            </tr>
+                        <tr>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+            </tr>
+            <tr>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+            </tr>
+                        <tr>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+            </tr>
+            <tr>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+                <td bgcolor="white"></td>
+                <td bgcolor="brown"><div id="cell"></div></td>
+            </tr>
+                        <tr>
+                <td bgcolor="brown"><div id="cell">&#9817</div></td>
+                <td bgcolor="white">&#9817</td>
+                <td bgcolor="brown"><div id="cell">&#9817</div></td>
+                <td bgcolor="white">&#9817</td>
+                <td bgcolor="brown"><div id="cell">&#9817</div></td>
+                <td bgcolor="white">&#9817</td>
+                <td bgcolor="brown"><div id="cell">&#9817</div></td>
+                <td bgcolor="white">&#9817</td>
+            </tr>
+            <tr>
+                <td bgcolor="white">&#9814</td>
+                <td bgcolor="brown"><div id="cell">&#9816</div></td>
+                <td bgcolor="white">&#9815</td>
+                <td bgcolor="brown"><div id="cell">&#9812</div></td>
+                <td bgcolor="white">&#9813</td>
+                <td bgcolor="brown"><div id="cell">&#9815</div></td>
+                <td bgcolor="white">&#9816</td>
+                <td bgcolor="brown"><div id="cell">&#9814</div></td>
+            </tr>
+        </table>
+    <button id="disp"></button>
+        <div id="coins"></div>
+        <div id="coin"></div>
+        <div id="check"></div>
+    </body></html>
